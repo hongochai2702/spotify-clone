@@ -38,6 +38,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       )}
     >
       <Icon size={26} />
+      {label}
     </Link>
   );
 };
