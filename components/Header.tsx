@@ -10,6 +10,7 @@ import Button from "./Button";
 import useAuthModal from "@/hooks/useAuthModal";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUsers";
+import { FaUserAlt } from "react-icons/fa";
 
 interface HeaderProps {
 	children: React.ReactNode;
@@ -69,7 +70,24 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
 				</div>
 				<div className="flex justify-center items-center gap-x-4">
 					{user ? (
-						<div>Logged in</div>
+						<div className="flex gap-x-4 items-center">
+							<Button
+								onClick={handleLogout}
+								className="
+								bg-white
+								px-6
+								py-2
+							"
+							>
+								Logout
+							</Button>
+							<Button
+								className="bg-white"
+								onClick={() => router.push("/account")}
+							>
+								<FaUserAlt />
+							</Button>
+						</div>
 					) : (
 						<>
 							<div>
