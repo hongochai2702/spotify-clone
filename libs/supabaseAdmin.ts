@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 import { Database } from "@/types_db";
-import { Prices, Product } from "@/types";
+import { Price, Product } from "@/types";
 
 import { stripe } from "./stripe";
 import { toDateTime } from "./helpers";
@@ -32,7 +32,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 };
 
 const upsertPriceRecord = async (price: Stripe.Price) => {
-	const priceData: Prices = {
+	const priceData: Price = {
 		id: price.id,
 		product_id: typeof price.product === "string" ? price.product : "",
 		active: price.active,

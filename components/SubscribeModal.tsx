@@ -6,6 +6,9 @@ import React, { memo, useState } from "react";
 import Button from "./Button";
 import Modal from "./Modal";
 import toast from "react-hot-toast";
+import { getStripe } from "@/libs/stripeClient";
+import { postData } from "@/libs/helpers";
+import useSubscribeModal from "@/hooks/useSubscribeModal";
 
 interface SubscribeModalProps {
 	products: ProductWithPrice[];
@@ -21,29 +24,43 @@ const formatPrice = (price: Price) => {
 };
 
 const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
-	const {user,isLoading,subscription} = useUser();
-
+	const subscribeModal = useSubscribeModal();
+	const { user, isLoading, subscription } = useUser();
 	const [priceIdLoading, setPriceIdLoading] = useState<string>();
+
+	const onChange = (open: boolean) => {
+		if (!open) {
+			subscribeModal.onClose();
+		}
+	};
 
 	const handleCheckout = async (price: Price) => {
 		setPriceIdLoading(price.id);
 
 		if (!user) {
 			setPriceIdLoading(undefined);
-			return toast.error('Must be logged in');
+			return toast.error("Must be logged in");
 		}
 
 		if (subscription) {
 			setPriceIdLoading(undefined);
-			return toast('Already subscribed');
+			return toast("Already subscribed");
 		}
 
 		try {
-			const {} = await
+			const { sessionId } = await postData({
+				url: "/api/create-checkout-session",
+				data: { price },
+			});
+
+			const stripe = await getStripe();
+			stripe?.redirectToCheckout({ sessionId });
 		} catch (error) {
 			toast.error((error as Error).message);
+		} finally {
+			setPriceIdLoading(undefined);
 		}
-	}
+	};
 
 	let content = <div className="text-center">No products available.</div>;
 	if (products.length) {
@@ -68,12 +85,17 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
 			</div>
 		);
 	}
+
+	if (subscription) {
+		content = <div className="text-center">Already subscripted</div>;
+	}
+
 	return (
 		<Modal
 			title="Only for premium users"
 			description="Listen to music with Spotify Premium"
-			isOpen
-			onChange={() => {}}
+			isOpen={subscribeModal.isOpen}
+			onChange={onChange}
 		>
 			{content}
 		</Modal>
