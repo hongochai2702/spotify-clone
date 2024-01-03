@@ -1,10 +1,12 @@
 import React from "react";
 
 import getSongsByTitle from "@/actions/getSongsByTitle";
+
 import Header from "@/components/Header";
 import SearchInput from "@/components/SearchInput";
-import SearchContent from "./components/SearchContent";
 import ContentPage from "@/components/ContentPage";
+
+import SearchContent from "./components/SearchContent";
 
 export const revalidate = 0;
 

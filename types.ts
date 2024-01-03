@@ -19,13 +19,14 @@ export interface UserDetails {
 
 export interface Product {
 	id: string;
-	acitve?: boolean;
+	active?: boolean;
 	name?: string;
+	image?: string;
 	description?: string;
 	metadata?: Stripe.Metadata;
 }
 
-export interface Prices {
+export interface Price {
 	id: string;
 	product_id?: string;
 	active?: boolean;
@@ -39,6 +40,11 @@ export interface Prices {
 	metadata?: Stripe.Metadata;
 	products?: Product;
 }
+
+export interface ProductWithPrice extends Product {
+	prices?: Price[];
+}
+
 export interface Subscription {
 	id: string;
 	user_id: string;
@@ -55,5 +61,5 @@ export interface Subscription {
 	canceled_at?: string;
 	trial_start?: string;
 	trial_end?: string;
-	prices: Prices;
+	prices: Price;
 }
